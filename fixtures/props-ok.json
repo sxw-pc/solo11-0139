@@ -1,0 +1,1 @@
+{"source_id":"prop-card-1","show_id":"show-1","signer_a":"stage-A","signer_b":"stage-B","requirements":[{"work_id":"work-1","role":"handbell","serial":"bell-7"},{"work_id":"work-2","role":"banner","serial":"banner-4"}],"scans":[{"id":"scan-bell","serial":"bell-7","case_id":"case-1"},{"id":"scan-banner","serial":"banner-4","case_id":"case-1"}]}
