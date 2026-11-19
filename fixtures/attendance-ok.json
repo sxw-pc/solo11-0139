@@ -1,0 +1,29 @@
+{
+  "source_id": "gate-batch-1",
+  "scans": [
+    {
+      "id": "g1",
+      "show_id": "show-1",
+      "ticket_id": "T1",
+      "gate": "north",
+      "at": 1100,
+      "action": "entry"
+    },
+    {
+      "id": "g2",
+      "show_id": "show-1",
+      "ticket_id": "T2",
+      "gate": "south",
+      "at": 1130,
+      "action": "entry"
+    },
+    {
+      "id": "g3",
+      "show_id": "show-1",
+      "ticket_id": "T1",
+      "gate": "north",
+      "at": 1200,
+      "action": "exit"
+    }
+  ]
+}
