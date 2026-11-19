@@ -1,5 +1,7 @@
 # 演出版权使用采录台
 
+增强素材另有独立的座席视线人工复核入口：先登记 show，再运行 `python -m rightscue sightline --db sample.sqlite --input fixtures/sightline-ok.json`。该入口目前只保存每席的人工 clear/obstructed 结论，不含舞台几何、遮挡时间和合同用途。
+
 本地合成的剧场场次、声轨使用证据和作品权利声明经三个独立入口采录。它为版权结算员提供逐作品付款与争议结果；运行中不联网、不含真实作品或权利人。
 
 ## 快速运行

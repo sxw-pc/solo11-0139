@@ -1,12 +1,12 @@
 import argparse
 import json
 from pathlib import Path
-from . import show,cue,rights,report
+from . import show,cue,rights,sightline,report
 from .store import connect,read
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['show','cue','rights','report','demo'])
+    parser.add_argument('command',choices=['show','cue','rights','sightline','report','demo'])
     parser.add_argument('--db',default='rightscue.sqlite')
     parser.add_argument('--input')
     args=parser.parse_args();db=connect(args.db)

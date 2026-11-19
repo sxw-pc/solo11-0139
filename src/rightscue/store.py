@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS rights_claim(id INTEGER PRIMARY KEY,work_id TEXT,owne
 CREATE TABLE IF NOT EXISTS fee_rule(work_id TEXT PRIMARY KEY,cents_per_second INTEGER,version INTEGER);
 CREATE TABLE IF NOT EXISTS royalty_case(show_id TEXT,work_id TEXT,seconds INTEGER,amount INTEGER,status TEXT,version INTEGER,PRIMARY KEY(show_id,work_id));
 CREATE TABLE IF NOT EXISTS royalty_event(id INTEGER PRIMARY KEY,show_id TEXT,work_id TEXT,delta INTEGER,reason TEXT,version INTEGER);
+CREATE TABLE IF NOT EXISTS seat_survey(id TEXT PRIMARY KEY,show_id TEXT,seat_id TEXT,visual_clear INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS seat_case(show_id TEXT,seat_id TEXT,status TEXT,PRIMARY KEY(show_id,seat_id));
 """
 
 def connect(path):
