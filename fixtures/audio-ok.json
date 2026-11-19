@@ -1,0 +1,31 @@
+{
+  "source_id": "audio-batch-1",
+  "probes": [
+    {
+      "id": "ap-1",
+      "show_id": "show-1",
+      "device_id": "recorder-A",
+      "starts": 1100,
+      "rate": 4,
+      "samples": [
+        0,
+        0.2,
+        -0.2,
+        0.1
+      ]
+    },
+    {
+      "id": "ap-2",
+      "show_id": "show-1",
+      "device_id": "recorder-B",
+      "starts": 1100,
+      "rate": 4,
+      "samples": [
+        0,
+        1,
+        -1,
+        0
+      ]
+    }
+  ]
+}
