@@ -17,6 +17,12 @@ CREATE TABLE IF NOT EXISTS rights_claim(id INTEGER PRIMARY KEY,work_id TEXT,owne
 CREATE TABLE IF NOT EXISTS fee_rule(work_id TEXT PRIMARY KEY,cents_per_second INTEGER,version INTEGER);
 CREATE TABLE IF NOT EXISTS royalty_case(show_id TEXT,work_id TEXT,seconds INTEGER,amount INTEGER,status TEXT,version INTEGER,PRIMARY KEY(show_id,work_id));
 CREATE TABLE IF NOT EXISTS royalty_event(id INTEGER PRIMARY KEY,show_id TEXT,work_id TEXT,delta INTEGER,reason TEXT,version INTEGER);
+CREATE TABLE IF NOT EXISTS master_contract(show_id TEXT PRIMARY KEY,contract TEXT,duration INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS master_segment(id TEXT PRIMARY KEY,show_id TEXT,file_no TEXT,starts INTEGER,ends INTEGER,sample_rate INTEGER,channels INTEGER,channel_order TEXT,drift_ppm REAL,drift_uncertainty_ppm REAL,digest TEXT,calibration TEXT,handover_deadline INTEGER,status TEXT,source_id TEXT);
+CREATE TABLE IF NOT EXISTS master_block(segment_id TEXT,idx INTEGER,digest TEXT,status TEXT,PRIMARY KEY(segment_id,idx));
+CREATE TABLE IF NOT EXISTS master_signature(id INTEGER PRIMARY KEY,segment_id TEXT,signer TEXT,signed_at INTEGER,valid INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS master_revocation(id INTEGER PRIMARY KEY,segment_id TEXT,reason TEXT,source_id TEXT);
+CREATE TABLE IF NOT EXISTS master_certificate(id INTEGER PRIMARY KEY,show_id TEXT,version INTEGER,contract TEXT,status TEXT,continuous INTEGER,unique_source INTEGER,plan TEXT,scope TEXT,source_id TEXT);
 """
 
 def connect(path):

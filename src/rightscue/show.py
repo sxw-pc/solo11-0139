@@ -37,6 +37,8 @@ def run(db,data):
     decide(db,'show',sid,status,'show status affects cue and payable royalty',[data['source_id']])
     from .cue import rematch_show
     from .rights import reconcile_show
+    from .master import recompute_show
     rematch_show(db,sid)
     reconcile_show(db,sid)
+    recompute_show(db,sid)
     return {'show':sid,'status':status,'program_version':version,'actual_start':actual}

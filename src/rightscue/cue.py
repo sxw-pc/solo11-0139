@@ -34,7 +34,10 @@ def run(db,data):
 
 def rematch_show(db,show_id):
     show=db.execute('SELECT * FROM show_slot WHERE id=?',(show_id,)).fetchone()
-    if not show: return
+    if not show:
+        from .master import recompute_show
+        recompute_show(db,show_id)
+        return
     row=db.execute('SELECT work_ids FROM program_revision WHERE show_id=? AND version=?',
                    (show_id,show['program_version'])).fetchone()
     allowed=set(json.loads(row['work_ids'])) if row else set()
@@ -54,6 +57,8 @@ def rematch_show(db,show_id):
                    'ON CONFLICT(cue_id) DO UPDATE SET work_id=excluded.work_id,status=excluded.status,reason=excluded.reason',
                    (cue['id'],work_id,status,'catalog and signed program version'))
         decide(db,'work-match',cue['id'],status,'title, composer and work number resolve within signed program',[show_id,show['program_version']])
+    from .master import recompute_show
+    recompute_show(db,show_id)
 
 def union_seconds(intervals):
     total=0;last=None
