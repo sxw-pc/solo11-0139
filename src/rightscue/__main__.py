@@ -17,6 +17,9 @@ def main():
             result=[]
             for command in ('show','cue','rights'):
                 with db: result.append(globals()[command].run(db,read(root/f'{command}-ok.json')))
+            geo=root/'sightline-geometry.json'
+            if geo.exists():
+                with db: result.append(sightline.run(db,read(geo)))
             result={'runs':result,'report':report.build(db)}
         else:
             if not args.input: parser.error('--input required')

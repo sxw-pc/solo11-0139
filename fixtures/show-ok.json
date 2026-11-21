@@ -1,1 +1,1 @@
-{"source_id":"show-v1","show":{"id":"show-1","venue":"hall-A","starts":1000,"ends":5000,"cancelled":false,"door_time":1030,"stage_time":1050,"program":{"version":1,"signed_at":900,"work_ids":["work-1","work-2"]}}}
+{"source_id": "show-v1", "show": {"id": "show-1", "venue": "hall-A", "starts": 1000, "ends": 5000, "cancelled": false, "door_time": 1030, "stage_time": 1050, "program": {"version": 1, "signed_at": 900, "work_ids": ["work-1", "work-2"], "scenes": ["scene-1", "scene-2"]}}}

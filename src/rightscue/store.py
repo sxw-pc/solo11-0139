@@ -19,12 +19,21 @@ CREATE TABLE IF NOT EXISTS royalty_case(show_id TEXT,work_id TEXT,seconds INTEGE
 CREATE TABLE IF NOT EXISTS royalty_event(id INTEGER PRIMARY KEY,show_id TEXT,work_id TEXT,delta INTEGER,reason TEXT,version INTEGER);
 CREATE TABLE IF NOT EXISTS seat_survey(id TEXT PRIMARY KEY,show_id TEXT,seat_id TEXT,visual_clear INTEGER,source_id TEXT);
 CREATE TABLE IF NOT EXISTS seat_case(show_id TEXT,seat_id TEXT,status TEXT,PRIMARY KEY(show_id,seat_id));
+CREATE TABLE IF NOT EXISTS venue_seat(source_id TEXT,id TEXT,show_id TEXT,venue TEXT,seat_id TEXT,position TEXT,eye_lo TEXT,eye_hi TEXT,PRIMARY KEY(source_id,id));
+CREATE TABLE IF NOT EXISTS stage_target(source_id TEXT,id TEXT,show_id TEXT,scene_id TEXT,starts INTEGER,ends INTEGER,boundary TEXT,PRIMARY KEY(source_id,id));
+CREATE TABLE IF NOT EXISTS moving_occluder(source_id TEXT,id TEXT,show_id TEXT,venue TEXT,scene_id TEXT,starts INTEGER,ends INTEGER,box_lo TEXT,box_hi TEXT,err TEXT,state TEXT,PRIMARY KEY(source_id,id));
+CREATE TABLE IF NOT EXISTS sight_commitment(ticket_id TEXT PRIMARY KEY,show_id TEXT,seat_id TEXT,mode TEXT,full_visibility INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS seat_cert(id INTEGER PRIMARY KEY AUTOINCREMENT,show_id TEXT,seat_id TEXT,program_version INTEGER,venue TEXT,state TEXT,status TEXT,reason TEXT,detail TEXT,source_id TEXT);
+CREATE TABLE IF NOT EXISTS reseat_order(id INTEGER PRIMARY KEY AUTOINCREMENT,ticket_id TEXT,show_id TEXT,from_seat TEXT,to_seat TEXT,status TEXT,reason TEXT,conflict_tickets TEXT,program_version INTEGER,source_id TEXT);
 """
 
 def connect(path):
     db=sqlite3.connect(path)
     db.row_factory=sqlite3.Row
     db.executescript(SCHEMA)
+    cols={r['name'] for r in db.execute('PRAGMA table_info(program_revision)')}
+    if 'scenes' not in cols:
+        db.execute('ALTER TABLE program_revision ADD COLUMN scenes TEXT')
     return db
 
 def read(path): return json.loads(Path(path).read_text(encoding='utf-8'))
