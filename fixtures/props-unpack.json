@@ -1,0 +1,1 @@
+{"source_id":"props-unpack-v1","kind":"unpack","id":"unpack-1","show_id":"show-1","case_id":"case-1","venue":"hall-A","signer_a":"receiving-A","signer_b":"receiving-B","seal_intact":true,"seal":"seal-1","received_at":2000,"items":[{"serial":"bell-9","kind":"unit"},{"serial":"banner-4","kind":"unit"},{"serial":"motor-M","kind":"component","prop_serial":"bell-9"}]}

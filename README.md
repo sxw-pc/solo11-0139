@@ -35,6 +35,44 @@ python -m rightscue report --db sample.sqlite
 
 本版不接入真实音频识别、票务系统或付款渠道。巡演地区权利、转授权链、退款、票房阶梯、录播许可、国际地区冲突、更名谱系和批次撤销属于后续独立扩展。
 
-## 增强起点：道具装箱条码
+## 道具包放行：装箱、异地拆箱、子件与等效替代
 
-先导入 `show-ok.json`，再运行 `python -m rightscue props --db sample.sqlite --input fixtures/props-ok.json`，可把当前节目单需要的道具序号与装箱条码逐项对照，缺少序号时报告 `incomplete`。当前只按条码字符串存在与否判断，不核对实物封签、拆箱后子件、同件重复占用或签审过的等效替代品。
+装箱条码只证明交运时箱里装过什么。放行按**实物序号与功能范围**判定，证据分五类，都经 `kind` 区分并可重放：
+
+| `kind` | 关键字段 | 作用 |
+| --- | --- | --- |
+| `commission` | `commission_id`, `scope`, `roles`, `signed_at`, 双签 | 装箱前确定本场委托覆盖哪些角色（如纯音效、录播近景） |
+| `packing` | `case_id`, `seal`, `packed_at`, `requirements`, `units`, `components`, `scans` | 封箱单：装入的整套道具、其可拆子件与箱外条码 |
+| `unpack` | `id`, `case_id`, `venue`, `seal_intact`, 双签, `items` | 异地开箱双签与实物清点；只有 `status='sealed'` 的拆箱进入可用库存 |
+| `substitution` | `cert_id`, `original_serial`, `substitute_serial`, `role`, `capabilities`, `valid_shows`, 双签 | 等效替代证书：只证明所列性能项目，并按场次生效 |
+| `return` | `id`, `returned_at`, 双签, `items(present)` | 反向归还清点；旧装箱单不能覆盖异地丢失 |
+
+放行结果写在 `prop_release`（追加式）及逐角色 `prop_release_role`。`report.build(db)["prop_release_summary"]` 列出每个角色所用的原始序号与实物序号、证据路径（证书 → 拆箱 → 子件）、证书覆盖到的具体性能、仍未满足的子要求以及冲突来源，而不只是一个 ready/incomplete 标记。
+
+判定规则：
+
+* 箱外条码、封箱单和拆箱双签缺一不可；缺箱子清单或封签破损时整场 `hold`，不会因为条码存在而放行。
+* 同一序号化子件只能装在一套道具上。两套同时上场的道具都申请同一电机 M 时，按开场时间（同刻则按场次号）只有一套占用；另一套明确列出被占用的 `motor-M` 和仍缺的件。
+* 同一箱体条码重复出现只生成一套子件，重复拆箱记为 `replay_conflict`；同一 `source_id` 同字节重放返回 `duplicate`，不新增决策。
+* 替代证书按性能项目逐项覆盖：`C4_tone` 不能替代 `visible_clock`。外观相似或名称相同不自动等效；证书上的 `role` 只是说明用途，覆盖与否看 `capabilities`。
+* 委托在装箱前确定；装箱后不能加宽角色范围，也不能以更宽的合同覆盖缺件。
+* 节目签发新版、改场馆、取消场次都会追加新的道具决定并令旧 `ready` 失效；返还清点发现装箱有、拆箱无的件会记入 `prop_loss`。
+* 道具决定与 `cue` / `rights` 完全分离，声轨匹配和版权费金额不受道具条码影响。
+
+验收场景可直接运行：
+
+```powershell
+python -m rightscue show --db sample.sqlite --input fixtures/show-ok.json
+python -m rightscue props --db sample.sqlite --input fixtures/props-commission-sound.json
+python -m rightscue props --db sample.sqlite --input fixtures/props-pack.json
+python -m rightscue props --db sample.sqlite --input fixtures/props-unpack.json
+python -m rightscue props --db sample.sqlite --input fixtures/props-cert-sound-only.json
+python -m rightscue report --db sample.sqlite
+```
+
+`bell-7` 在拆箱缺失、`bell-9` 仅持 C 音证书时：纯音效委托 `props-commission-sound.json` 放行（`substituted`），录播近景委托 `props-commission-open.json` 保持 `hold`，直到补 `props-cert-appearance.json` 或找回 `bell-7`。
+
+### 兼容旧装箱单
+
+不含 `kind`、只有 `requirements` + `scans` 的旧载荷仍按条码集合记 `ready/incomplete`（`prop_case`），便于回放既有数据；它不参与新版放行判断，也不改变声轨与版权费。
+

@@ -1,0 +1,1 @@
+{"source_id":"props-cert-sound-only","kind":"substitution","show_id":"show-1","cert_id":"cert-bell-9-sound-only","original_serial":"bell-7","substitute_serial":"bell-9","role":"sound","capabilities":["C4_tone"],"valid_shows":["show-1"],"signed_at":930,"signer_a":"technical-A","signer_b":"technical-B"}
