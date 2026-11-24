@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS royalty_case(show_id TEXT,work_id TEXT,seconds INTEGE
 CREATE TABLE IF NOT EXISTS royalty_event(id INTEGER PRIMARY KEY,show_id TEXT,work_id TEXT,delta INTEGER,reason TEXT,version INTEGER);
 CREATE TABLE IF NOT EXISTS audio_probe(id TEXT PRIMARY KEY,show_id TEXT,device_id TEXT,starts INTEGER,rate INTEGER,samples_json TEXT,source_id TEXT);
 CREATE TABLE IF NOT EXISTS audio_health(probe_id TEXT PRIMARY KEY,peak REAL,rms REAL,clipped INTEGER,status TEXT);
+CREATE TABLE IF NOT EXISTS sound_calibration(id TEXT PRIMARY KEY,show_id TEXT,rate INTEGER,measured_at INTEGER,layout_json TEXT,ingested_at INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS sound_pulse(id TEXT PRIMARY KEY,calibration_id TEXT,speaker_id TEXT,label TEXT,digest TEXT,samples_json TEXT,rate INTEGER,independent INTEGER,conflict INTEGER DEFAULT 0,source_id TEXT,UNIQUE(calibration_id,label));
+CREATE TABLE IF NOT EXISTS sound_response(id INTEGER PRIMARY KEY,pulse_id TEXT,mic_id TEXT,lag_start INTEGER,samples_json TEXT,clipped INTEGER,missing INTEGER,length INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS sound_response_clip(pulse_id TEXT,mic_id TEXT,lag INTEGER,source_id TEXT);
+CREATE TABLE IF NOT EXISTS gain_calibration(show_id TEXT,version INTEGER,signed_at INTEGER,common_error REAL,source_id TEXT,PRIMARY KEY(show_id,version));
+CREATE TABLE IF NOT EXISTS wiring_contract(id TEXT,show_id TEXT,version INTEGER,signed_at INTEGER,mapping_json TEXT,gain_ranges_json TEXT,peak_limits_json TEXT,source_id TEXT,status TEXT,PRIMARY KEY(id,version));
+CREATE TABLE IF NOT EXISTS sound_fir(id INTEGER PRIMARY KEY,show_id TEXT,calibration_id TEXT,speaker_id TEXT,mic_id TEXT,lag INTEGER,value REAL,lo REAL,hi REAL,quality TEXT,source_id TEXT,UNIQUE(calibration_id,speaker_id,mic_id,lag));
+CREATE TABLE IF NOT EXISTS sound_license(id INTEGER PRIMARY KEY,show_id TEXT,calibration_id TEXT,contract_id TEXT,contract_version INTEGER,gain_version INTEGER,status TEXT,gain_ranges_json TEXT,verdict_json TEXT,superseded INTEGER DEFAULT 0,reason TEXT,source_id TEXT);
 """
 
 def connect(path):

@@ -1,0 +1,16 @@
+{
+  "source_id": "pa-contract-1",
+  "kind": "contract",
+  "contract": {
+    "id": "dual-reading",
+    "show_id": "show-1",
+    "version": 1,
+    "signed_at": 900,
+    "mapping": [
+      {"id": "ch-1", "speaker_id": "spk-1", "mic_id": "mic-1"},
+      {"id": "ch-2", "speaker_id": "spk-2", "mic_id": "mic-2"}
+    ],
+    "gain_ranges": {"ch-1": [0.1, 1.3], "ch-2": [0.1, 1.3]},
+    "peak_limits": {"ch-1": 2.0, "ch-2": 2.0}
+  }
+}

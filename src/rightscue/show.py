@@ -42,4 +42,22 @@ def run(db,data):
     for probe in db.execute('SELECT id FROM audio_probe WHERE show_id=?',(sid,)).fetchall():
         from .audio_probe import summarize
         summarize(db,probe['id'])
+    from . import pa
+    if cancelled:
+        # Cancelling the show voids every standing reinforcement license; the
+        # raw pulses and superseded license versions remain in the report.
+        pa.reevaluate_show(db,sid,data['source_id'])
+    elif existing and existing['venue'] != s['venue']:
+        # Venue correction invalidates licenses measured under the old layout
+        # and re-evaluates contracts against the corrected venue.
+        for row in db.execute('SELECT id,contract_id,contract_version FROM sound_license '
+                              'WHERE show_id=? AND superseded=0',(sid,)).fetchall():
+            db.execute('UPDATE sound_license SET superseded=1, reason=? WHERE id=?',
+                       ('venue corrected %s -> %s' % (existing['venue'],s['venue']),row['id']))
+            decide(db,'pa-license',f"{row['contract_id']}:v{row['contract_version']}",
+                   'superseded','venue correction invalidates prior reinforcement license',
+                   [sid,row['id'],data['source_id']])
+        pa.reevaluate_show(db,sid,data['source_id'])
+    else:
+        pa.reevaluate_show(db,sid,data['source_id'])
     return {'show':sid,'status':status,'program_version':version,'actual_start':actual}

@@ -1,12 +1,12 @@
 import argparse
 import json
 from pathlib import Path
-from . import show,cue,rights,audio_probe,report
+from . import show,cue,rights,audio_probe,pa,report
 from .store import connect,read
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['show','cue','rights','audio','report','demo'])
+    parser.add_argument('command',choices=['show','cue','rights','audio','pa','report','demo'])
     parser.add_argument('--db',default='rightscue.sqlite')
     parser.add_argument('--input')
     args=parser.parse_args();db=connect(args.db)
@@ -20,7 +20,10 @@ def main():
             result={'runs':result,'report':report.build(db)}
         else:
             if not args.input: parser.error('--input required')
-            with db: result=(audio_probe if args.command=='audio' else globals()[args.command]).run(db,read(args.input))
+            if args.command=='audio': module=audio_probe
+            elif args.command=='pa': module=pa
+            else: module=globals()[args.command]
+            with db: result=module.run(db,read(args.input))
         print(json.dumps({'module_file':__file__,'result':result},ensure_ascii=False,indent=2))
     finally:db.close()
 

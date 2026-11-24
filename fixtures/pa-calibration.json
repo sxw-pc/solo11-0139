@@ -1,0 +1,43 @@
+{
+  "source_id": "pa-calibration-1",
+  "kind": "calibration",
+  "calibration": {
+    "id": "cal-1",
+    "show_id": "show-1",
+    "rate": 8,
+    "measured_at": 950,
+    "layout": {
+      "venue": "hall-A",
+      "points": [
+        {"id": "spk-1", "kind": "speaker", "at": [0, 0]},
+        {"id": "spk-2", "kind": "speaker", "at": [10, 0]},
+        {"id": "mic-1", "kind": "mic", "at": [0, 5]},
+        {"id": "mic-2", "kind": "mic", "at": [10, 5]}
+      ]
+    },
+    "pulses": [
+      {
+        "id": "p1",
+        "speaker_id": "spk-1",
+        "label": "imp-1",
+        "rate": 8,
+        "samples": [1, 0, 0, 0],
+        "responses": [
+          {"mic_id": "mic-1", "lag_start": 0, "samples": [0, 0, 0, 0]},
+          {"mic_id": "mic-2", "lag_start": 0, "samples": [0, 0.8, 0, 0]}
+        ]
+      },
+      {
+        "id": "p2",
+        "speaker_id": "spk-2",
+        "label": "imp-2",
+        "rate": 8,
+        "samples": [1, 0, 0, 0],
+        "responses": [
+          {"mic_id": "mic-1", "lag_start": 0, "samples": [0, 0.8, 0, 0]},
+          {"mic_id": "mic-2", "lag_start": 0, "samples": [0, 0, 0, 0]}
+        ]
+      }
+    ]
+  }
+}
